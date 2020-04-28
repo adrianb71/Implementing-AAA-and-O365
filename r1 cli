@@ -1,0 +1,28 @@
+en
+conf t
+hostname R1
+int e0/0
+ip address 172.20.0.20 255.255.254.0
+exit
+ip default-gateway 172.20.0.1
+ip domain-name bogacz.edu
+username admin privilege 15 secret 0 cisco
+enable secret cisco
+aaa new-model
+aaa group server radius RAD_SERVER
+server-private 172.20.0.11 auth-port 1812 acct-port 1813 key cisco123
+exit
+aaa authentication login default group RAD_SERVER local
+aaa authorization exec default group RAD_SERVER local if-authenticated
+aaa authorization console
+exit
+debug aaa authentication
+debug aaa authorization
+debug radius
+conf t
+crypto key generate rsa
+1024
+ip ssh version 2
+line vty 0 4
+transport input ssh
+exit
